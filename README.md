@@ -3,7 +3,7 @@ Workshop de Programação Funcional
 
 Clone o projeto
 ```
-git clone https://github.com/matheusml/workshop-fp.git
+git clone https://github.com/daniiell3/workshop-fp.git
 ```
 
 Entre na pasta do projeto
@@ -13,12 +13,12 @@ cd workshop-fp
 
 Instale o mocha
 ```
-npm install -g mocha
+npm i
 ```
 
 Rode os testes
 ```
-mocha
+npm run test
 ```
 
 Ajuste os blocos de código no arquivo ```test.js``` para que os testes passem.
