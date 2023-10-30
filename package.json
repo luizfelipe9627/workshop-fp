@@ -4,6 +4,7 @@
   "description": "Workshop de Programação Funcional =================",
   "main": "test.js",
   "scripts": {
+    "pretest": "clear",
     "test": "mocha"
   },
   "repository": {
