@@ -26,9 +26,9 @@ describe("Functional Programming Workshop", function () {
     });
 
     it("returns the increment", function () {
+      // impure
       var counter = 0;
 
-      // impure
       var increment = function () {
         counter = counter + 1;
         return counter;
@@ -43,9 +43,9 @@ describe("Functional Programming Workshop", function () {
     });
 
     it("Retorne o quadrado", function () {
+      // impure
       var x = 10;
 
-      // impure
       var square = function () {
         x = x * 2;
         return x;
@@ -69,7 +69,7 @@ describe("Functional Programming Workshop", function () {
         return Math.sqrt(number);
       });
 
-      // or like this:
+      // Boa prática:
       var roots = numbers.map(Math.sqrt);
 
       assert.deepEqual(roots, [1, 2, 3]);
@@ -82,6 +82,11 @@ describe("Functional Programming Workshop", function () {
         { name: "Maria", grade: 9 },
       ];
 
+      var grades = students.map(function (student) {
+        return student.grade;
+      });
+
+      // Boa prática:
       var grades = students.map(({ grade }) => {
         return grade;
       });
@@ -98,6 +103,13 @@ describe("Functional Programming Workshop", function () {
 
       var animals = [{ name: "Panda" }, { name: "Elephant" }, { name: "Dog" }];
 
+      var byNames = function (array) {
+        return array.map(function (item) {
+          return item.name;
+        });
+      };
+
+      // Boa prática:
       var byNames = (array) => {
         return array.map(({ name }) => {
           return name;
@@ -117,6 +129,9 @@ describe("Functional Programming Workshop", function () {
         return number > 4;
       });
 
+      // Boa prática:
+      var filteredNumbers = numbers.filter((number) => number > 4);
+
       assert.deepEqual(filteredNumbers, [9]);
     });
 
@@ -127,6 +142,11 @@ describe("Functional Programming Workshop", function () {
         { name: "Maria", grade: 9 },
       ];
 
+      var filterApprovedStudents = students.filter(function (student) {
+        return student.grade >= 6;
+      });
+
+      // Boa prática:
       var filterApprovedStudents = students.filter(({ grade }) => grade >= 6);
 
       assert.deepEqual(filterApprovedStudents, [
@@ -145,6 +165,15 @@ describe("Functional Programming Workshop", function () {
       ];
 
       var filterApprovedStudentsByName = students
+        .filter(function (student) {
+          return student.grade >= 6;
+        })
+        .map(function (student) {
+          return student.name;
+        });
+
+      // Boa prática:
+      var filterApprovedStudentsByName = students
         .filter(({ grade }) => grade >= 6)
         .map(({ name }) => name);
 
@@ -160,6 +189,11 @@ describe("Functional Programming Workshop", function () {
         return acc + current;
       }, 0);
 
+      // Boa prática:
+      var sum = numbers.reduce((acc, current) => {
+        return acc + current;
+      }, 0);
+
       assert.equal(sum, 10);
     });
 
@@ -170,8 +204,13 @@ describe("Functional Programming Workshop", function () {
         { name: "Maria", grade: 9 },
       ];
 
-      var combinedNames = students.reduce((acc, current) => {
+      var combinedNames = students.reduce(function (acc, current) {
         return acc + current.name;
+      }, "");
+
+      // Boa prática:
+      var combinedNames = students.reduce((acc, { name }) => {
+        return acc + name;
       }, "");
 
       assert.equal(combinedNames, "AnnaJohnMaria");
@@ -180,10 +219,16 @@ describe("Functional Programming Workshop", function () {
     it("Retorne os números pares", function () {
       var numbers = [1, 2, 3, 4];
 
-      var evenNumbers = numbers.reduce((acc, current) => {
+      var evenNumbers = numbers.reduce(function (acc, current) {
         if (current % 2 === 0) {
           acc.push(current);
         }
+        return acc;
+      }, []);
+
+      // Boa prática:
+      var evenNumbers = numbers.reduce((acc, current) => {
+        current % 2 === 0 ? acc.push(current) : null;
         return acc;
       }, []);
 
@@ -199,6 +244,15 @@ describe("Functional Programming Workshop", function () {
         { name: "Maria", grade: 9 },
       ];
 
+      var totalSumOfTheGrades = students
+        .map(function (student) {
+          return student.grade;
+        })
+        .reduce(function (acc, current) {
+          return (grade = acc + current);
+        });
+
+      // Boa prática:
       var totalSumOfTheGrades = students
         .map(({ grade }) => grade)
         .reduce((acc, current) => {
@@ -221,6 +275,9 @@ describe("Functional Programming Workshop", function () {
         return student.grade > 6;
       };
 
+      // Boa prática:
+      var filterGrade = (student) => student.grade > 6;
+
       var filteredStudents = students.filter(filterGrade);
 
       assert.deepEqual(filteredStudents, [{ name: "Maria", grade: 9 }]);
@@ -238,6 +295,11 @@ describe("Functional Programming Workshop", function () {
       var calculate = function (operation, x, y) {
         return operation(x, y);
       };
+
+      // Boa prática:
+      var sum = (x, y) => x + y;
+      var mult = (x, y) => x * y;
+      var calculate = (operation, x, y) => operation(x, y);
 
       assert.equal(calculate(sum, 10, 2), 12);
       assert.equal(calculate(mult, 10, 2), 20);
@@ -258,21 +320,19 @@ describe("Functional Programming Workshop", function () {
     });
 
     it("Retorne a soma", function () {
-      // impure
       var sum = function (num1) {
         return function (num2) {
           return num1 + num2;
         };
       };
 
-      // pure
+      // Boa prática:
       var sum = (num1) => (num2) => num1 + num2;
 
       assert.equal(sum(2)(3), 5);
     });
 
     it("Retorne o volume", function () {
-      // impure
       var volume = function (num1) {
         return function (num2) {
           return function (num3) {
@@ -281,14 +341,13 @@ describe("Functional Programming Workshop", function () {
         };
       };
 
-      // pure
+      // Boa prática:
       var volume = (num1) => (num2) => (num3) => (num1 + num2 + num3) * 4;
 
       assert.equal(volume(2)(3)(10), 60);
     });
 
     it("Retorne o objeto", function () {
-      // impure
       var student = function (firstName) {
         return function (lastName) {
           return function (age) {
@@ -301,7 +360,7 @@ describe("Functional Programming Workshop", function () {
         };
       };
 
-      // pure
+      // Boa prática:
       var student = (firstName) => (lastName) => (age) => {
         return {
           firstName: firstName,
@@ -334,6 +393,11 @@ describe("Functional Programming Workshop", function () {
         return x.toUpperCase();
       };
 
+      // Boa prática:
+      var compose = (f, g) => (x) => f(g(x));
+      var reverse = (x) => x.split("").reverse().join("");
+      var toUpperCase = (x) => x.toUpperCase();
+
       var reversedUpperCase = compose(reverse, toUpperCase);
 
       assert.equal(reversedUpperCase("hello"), "OLLEH");
@@ -354,9 +418,14 @@ describe("Functional Programming Workshop", function () {
         return x + "!!!";
       };
 
-      var angry = compose(toUpperCase, concat);
+      // Boa prática:
+      var compose = (f, g) => (x) => f(g(x));
+      var toUpperCase = (x) => x.toUpperCase();
+      var concat = (x) => x + "!!!";
 
-      assert.equal(angry("hello"), "HELLO!!!");
+      var hello = compose(toUpperCase, concat);
+
+      assert.equal(hello("hello"), "HELLO!!!");
     });
 
     it("Retorne o número de palavras", function () {
@@ -373,6 +442,11 @@ describe("Functional Programming Workshop", function () {
       var length = function (x) {
         return x.length;
       };
+
+      // Boa prática:
+      var compose = (f, g) => (x) => f(g(x));
+      var split = (x) => x.split(" ");
+      var length = (x) => x.length;
 
       var numberOfWords = compose(length, split);
 
@@ -394,9 +468,14 @@ describe("Functional Programming Workshop", function () {
         return x.split("").reverse().join("");
       };
 
-      var angryReversed = compose(toUpperCase, reverse);
+      // Boa prática:
+      var compose = (f, g) => (x) => f(g(x));
+      var toUpperCase = (x) => "!!!" + x.toUpperCase();
+      var reverse = (x) => x.split("").reverse().join("");
 
-      assert.equal(angryReversed("hello"), "!!!OLLEH");
+      var helloReversed = compose(toUpperCase, reverse);
+
+      assert.equal(helloReversed("hello"), "!!!OLLEH");
     });
   });
 });
